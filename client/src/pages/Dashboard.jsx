@@ -31,7 +31,16 @@ const Dashboard = () => {
       <div className="container">
         <div className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8`}>
           <div className={`bg-green-rifle rounded overflow-hidden`}>
-            <h3 className={`p-3 font-bold text-white bg-axolotl`}>To Do</h3>
+            <h3
+              className={`flex justify-between items-center p-3 font-bold text-white bg-axolotl`}
+            >
+              <span>To Do</span>
+              <span
+                className={`inline-flex justify-center items-center w-7 h-7 bg-white text-axolotl text-xs rounded-full`}
+              >
+                {toDoTasks.length}
+              </span>
+            </h3>
             <div className={`min-h-12 p-2 space-y-2`}>
               {toDoTasks.length ? (
                 toDoTasks.map((task) => (
@@ -53,7 +62,16 @@ const Dashboard = () => {
             </div>
           </div>
           <div className={`bg-green-rifle rounded overflow-hidden`}>
-            <h3 className={`p-3 font-bold text-white bg-axolotl`}>Progress</h3>
+            <h3
+              className={`flex justify-between items-center p-3 font-bold text-white bg-axolotl`}
+            >
+              <span>Progress</span>
+              <span
+                className={`inline-flex justify-center items-center w-7 h-7 bg-white text-axolotl text-xs rounded-full`}
+              >
+                {progressTasks.length}
+              </span>
+            </h3>
             <div className={`min-h-12 p-2 space-y-2`}>
               {progressTasks.length ? (
                 progressTasks.map((task) => (
@@ -75,7 +93,16 @@ const Dashboard = () => {
             </div>
           </div>
           <div className={`bg-green-rifle rounded overflow-hidden`}>
-            <h3 className={`p-3 font-bold text-white bg-axolotl`}>Done</h3>
+            <h3
+              className={`flex justify-between items-center p-3 font-bold text-white bg-axolotl`}
+            >
+              <span>Done</span>
+              <span
+                className={`inline-flex justify-center items-center w-7 h-7 bg-white text-axolotl text-xs rounded-full`}
+              >
+                {doneTasks.length}
+              </span>
+            </h3>
             <div className={`min-h-12 p-2 space-y-2`}>
               {doneTasks.length ? (
                 doneTasks.map((task) => (
