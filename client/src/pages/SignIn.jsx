@@ -1,7 +1,12 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 import { useFormik } from "formik";
 import * as yup from "yup";
 import { FaGoogle } from "react-icons/fa";
+import { useDispatch, useSelector } from "react-redux";
+import { setUserLoading } from "../redux/auth/authSlice.js";
+import { signInWithEP, signInWithGoogle } from "../redux/auth/authThunks.js";
 import SignUp from "../components/SignUp.jsx";
 
 // sign in form validation
@@ -17,14 +22,49 @@ const validationSchema = yup.object({
 });
 
 const SignIn = () => {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { isUserLoading } = useSelector((state) => state.authSlice);
+
   const formik = useFormik({
     initialValues: {
       email: "",
       password: "",
     },
     validationSchema,
-    onSubmit: (values) => {},
+    onSubmit: (values) => {
+      dispatch(signInWithEP({ values })).then((response) => {
+        if (response?.error) {
+          dispatch(setUserLoading(false));
+
+          if (
+            response.error.message === "Firebase: Error (auth/wrong-password)."
+          ) {
+            toast.error("Incorrect password!");
+          } else if (
+            response.error.message === "Firebase: Error (auth/user-not-found)."
+          ) {
+            toast.error("User not found!");
+          } else {
+            toast.error("Something went wrong!");
+          }
+        } else {
+          navigate("/dashboard");
+        }
+      });
+    },
   });
+
+  const handleSignInWithGoogle = () => {
+    dispatch(signInWithGoogle()).then((response) => {
+      if (response?.error) {
+        dispatch(setUserLoading(false));
+        toast.error("Something went wrong!");
+      } else {
+        navigate("/dashboard");
+      }
+    });
+  };
 
   return (
     <section>
@@ -47,7 +87,7 @@ const SignIn = () => {
             </h1>
           </div>
           {/* sign in form */}
-          <div className="justify-self-center card w-full sm:max-w-sm bg-base-100 shadow-2xl">
+          <div className="justify-self-center card w-full sm:max-w-sm bg-white shadow-2xl">
             <div className="card-body">
               <form
                 className="form-control gap-y-4"
@@ -93,7 +133,13 @@ const SignIn = () => {
                   type="submit"
                   className="btn btn-sm w-full bg-axolotl hover:bg-transparent text-white hover:text-axolotl !border-axolotl rounded normal-case"
                 >
-                  Sign In
+                  <span>Sign In</span>
+                  {isUserLoading ? (
+                    <span
+                      className="inline-block h-4 w-4 border-2 border-current border-r-transparent rounded-full animate-spin"
+                      role="status"
+                    ></span>
+                  ) : null}
                 </button>
                 {/* new user sign up modal invoke */}
                 <div className="flex flex-col lg:flex-row lg:justify-center lg:space-x-2">
@@ -107,7 +153,10 @@ const SignIn = () => {
                 </div>
                 <div className="divider">or</div>
                 {/* google authentication method */}
-                <div className="flex justify-center items-center p-2 border hover:text-axolotl hover:border-axolotl rounded cursor-pointer space-x-2 transition-colors duration-500">
+                <div
+                  className="flex justify-center items-center p-2 border hover:text-axolotl hover:border-axolotl rounded cursor-pointer space-x-2 transition-colors duration-500"
+                  onClick={handleSignInWithGoogle}
+                >
                   <FaGoogle className="text-xl" />
                   <span>Continue with Google</span>
                 </div>

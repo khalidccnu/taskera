@@ -10,6 +10,7 @@ module.exports = {
     },
     extend: {
       colors: {
+        eggshell: "#edf1d6",
         axolotl: "#62775c",
         green: {
           rifle: "#40513b",

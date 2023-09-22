@@ -1,5 +1,6 @@
 import React from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import Providers from "./providers/index.jsx";
 import Root from "./Root.jsx";
 import SignIn from "./pages/SignIn.jsx";
 
@@ -17,7 +18,11 @@ const App = () => {
     },
   ]);
 
-  return <RouterProvider router={router} />;
+  return (
+    <Providers>
+      <RouterProvider router={router} />
+    </Providers>
+  );
 };
 
 export default App;

@@ -1,7 +1,12 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 import { useFormik } from "formik";
 import * as yup from "yup";
 import { FaUpload } from "react-icons/fa";
+import { useDispatch, useSelector } from "react-redux";
+import { setUserLoading } from "../redux/auth/authSlice.js";
+import { createUserWithEP } from "../redux/auth/authThunks.js";
 
 // sign up form validation
 const validationSchema = yup.object({
@@ -30,6 +35,10 @@ const validationSchema = yup.object({
 });
 
 const SignUp = () => {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { isUserLoading } = useSelector((state) => state.authSlice);
+
   const formik = useFormik({
     initialValues: {
       name: "",
@@ -38,7 +47,37 @@ const SignUp = () => {
       userPhoto: null,
     },
     validationSchema,
-    onSubmit: (values) => {},
+    onSubmit: (values) => {
+      const formData = new FormData();
+
+      // create form data
+      Object.entries(values).forEach(([key, value]) => {
+        if (typeof value === "string" || value instanceof Blob)
+          formData.append(key, value);
+      });
+
+      // create user
+      dispatch(createUserWithEP({ formData })).then((response) => {
+        if (response?.error) {
+          dispatch(setUserLoading(false));
+
+          if (
+            response.error.message ===
+            "Firebase: Error (auth/email-already-in-use)."
+          ) {
+            toast.error("Email already in use!");
+          } else {
+            toast.error("Something went wrong!");
+          }
+        } else {
+          toast.success(
+            "Your account has been created successfully! You are being redirected, please wait..."
+          );
+
+          setTimeout(() => navigate("/dashboard"), 3000);
+        }
+      });
+    },
   });
 
   return (
@@ -147,7 +186,13 @@ const SignUp = () => {
           type="submit"
           className="btn btn-sm w-full bg-axolotl hover:bg-transparent text-white hover:text-axolotl !border-axolotl rounded normal-case"
         >
-          Sign Up
+          <span>Sign Up</span>
+          {isUserLoading ? (
+            <span
+              className="inline-block h-4 w-4 border-2 border-current border-r-transparent rounded-full animate-spin"
+              role="status"
+            ></span>
+          ) : null}
         </button>
       </form>
     </div>
