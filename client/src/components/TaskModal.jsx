@@ -1,8 +1,10 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
+import toast from "react-hot-toast";
 import { useFormik } from "formik";
 import * as yup from "yup";
 import DatePicker from "react-datepicker";
 import { useDispatch, useSelector } from "react-redux";
+import { setTasks } from "../redux/tasks/tasksSlice.js";
 import { getUsers } from "../redux/users/usersThunks.js";
 
 // new task form validation
@@ -23,6 +25,7 @@ const validationSchema = yup.object({
 });
 
 const TaskModal = () => {
+  const closeModalRef = useRef(null);
   const dispatch = useDispatch();
   const { users } = useSelector((store) => store.usersSlice);
 
@@ -35,7 +38,11 @@ const TaskModal = () => {
       priority: "",
     },
     validationSchema,
-    onSubmit: (values) => {},
+    onSubmit: (values) => {
+      dispatch(setTasks(values));
+      closeModalRef.current.click();
+      toast.success("Task created");
+    },
   });
 
   useEffect(() => {
@@ -52,7 +59,10 @@ const TaskModal = () => {
         </div>
         {/* close modal */}
         <form method="dialog">
-          <button className="btn btn-sm normal-case focus:outline-none">
+          <button
+            className="btn btn-sm normal-case focus:outline-none"
+            ref={closeModalRef}
+          >
             Close
           </button>
         </form>
