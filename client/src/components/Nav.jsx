@@ -1,5 +1,5 @@
 import React from "react";
-import { NavLink, useNavigate } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import { IKImage } from "imagekitio-react";
 import { FaPlus } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
@@ -25,7 +25,9 @@ const Nav = () => {
         <div className="navbar">
           {/* brand identity */}
           <figure className="flex-1">
-            <img src="/lg-taskera.svg" alt="" className={`w-20`} />
+            <Link to="/">
+              <img src="/lg-taskera.svg" alt="" className={`w-20`} />
+            </Link>
           </figure>
           <div className="flex-none gap-2">
             {/* new task */}

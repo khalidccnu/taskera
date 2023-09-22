@@ -1,5 +1,5 @@
-import React from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import { useFormik } from "formik";
 import * as yup from "yup";
@@ -22,9 +22,11 @@ const validationSchema = yup.object({
 });
 
 const SignIn = () => {
+  const location = useLocation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { isUserLoading } = useSelector((state) => state.authSlice);
+  const fromURL = location.state?.fromURL.pathname;
 
   const formik = useFormik({
     initialValues: {
@@ -65,6 +67,13 @@ const SignIn = () => {
       }
     });
   };
+
+  useEffect(() => {
+    if (fromURL)
+      toast.error(
+        "Only registered user can access this page. Please, sign in first!"
+      );
+  }, []);
 
   return (
     <section>
