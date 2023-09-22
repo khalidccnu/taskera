@@ -11,7 +11,9 @@ module.exports = {
     extend: {
       colors: {
         axolotl: "#62775c",
-        rifleGreen: "#40513b",
+        green: {
+          rifle: "#40513b",
+        },
       },
       fontFamily: {
         josefinSans: ["Josefin Sans", ...defaultTheme.fontFamily.sans],
