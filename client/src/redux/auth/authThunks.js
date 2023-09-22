@@ -7,8 +7,25 @@ import {
   updateProfile,
   signOut,
 } from "firebase/auth";
-import { auth, googleProvider } from "../../utils/firebase.config.js";
+import { doc, getDoc, setDoc } from "firebase/firestore";
+import { auth, db, googleProvider } from "../../utils/firebase.config.js";
 import { setFBUnHold, setUserLoading } from "./authSlice";
+
+// create user in firestore
+const createUser = async (values) => {
+  const docRef = doc(db, "users", values.uid);
+  const docSnap = await getDoc(docRef);
+
+  if (docSnap.exists()) return "User exist!";
+
+  await setDoc(doc(db, "users", values.uid), {
+    ...values,
+    username: null,
+    bio: null,
+  });
+
+  return "User inserted!";
+};
 
 // get user authentication from firebase
 export const signInWithEP = createAsyncThunk(
@@ -32,6 +49,10 @@ export const signInWithGoogle = createAsyncThunk(
     thunkAPI.dispatch(setUserLoading(true));
 
     const userCred = await signInWithPopup(auth, googleProvider);
+    await createUser({
+      uid: userCred.user.uid,
+      displayName: userCred.user.displayName,
+    });
 
     thunkAPI.dispatch(setFBUnHold(true));
     return userCred;
@@ -61,6 +82,10 @@ export const createUserWithEP = createAsyncThunk(
           photoURL: response.data.filePath,
         })
       );
+    await createUser({
+      uid: userCred.user.uid,
+      displayName: userCred.user.displayName,
+    });
 
     thunkAPI.dispatch(setFBUnHold(true));
     return userCred;

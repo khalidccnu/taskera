@@ -1,7 +1,9 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useFormik } from "formik";
 import * as yup from "yup";
 import DatePicker from "react-datepicker";
+import { useDispatch, useSelector } from "react-redux";
+import { getUsers } from "../redux/users/usersThunks.js";
 
 // new task form validation
 const validationSchema = yup.object({
@@ -21,6 +23,9 @@ const validationSchema = yup.object({
 });
 
 const TaskModal = () => {
+  const dispatch = useDispatch();
+  const { users } = useSelector((store) => store.usersSlice);
+
   const formik = useFormik({
     initialValues: {
       title: "",
@@ -32,6 +37,10 @@ const TaskModal = () => {
     validationSchema,
     onSubmit: (values) => {},
   });
+
+  useEffect(() => {
+    dispatch(getUsers());
+  }, []);
 
   return (
     <div className="modal-box max-w-sm">
@@ -98,6 +107,11 @@ const TaskModal = () => {
             <option value="" disabled selected>
               Assign
             </option>
+            {users.map((user) => (
+              <option key={user.uid} value={user.uid}>
+                {user.displayName}
+              </option>
+            ))}
           </select>
           {formik.touched.assign && Boolean(formik.errors.assign) ? (
             <small className="text-red-600">
