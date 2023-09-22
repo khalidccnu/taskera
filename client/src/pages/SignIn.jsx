@@ -40,13 +40,10 @@ const SignIn = () => {
           dispatch(setUserLoading(false));
 
           if (
-            response.error.message === "Firebase: Error (auth/wrong-password)."
+            response.error.message ===
+            "Firebase: Error (auth/invalid-login-credentials)."
           ) {
-            toast.error("Incorrect password!");
-          } else if (
-            response.error.message === "Firebase: Error (auth/user-not-found)."
-          ) {
-            toast.error("User not found!");
+            toast.error("Invalid sign in!");
           } else {
             toast.error("Something went wrong!");
           }

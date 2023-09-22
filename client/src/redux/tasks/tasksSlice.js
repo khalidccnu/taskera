@@ -5,6 +5,9 @@ import { addToTasks } from "../../utils/localStorage.js";
 const initialState = {
   tasks: [],
   tasksError: null,
+  toDoTasks: [],
+  progressTasks: [],
+  doneTasks: [],
 };
 
 const tasksSlice = createSlice({
@@ -20,6 +23,17 @@ const tasksSlice = createSlice({
 
       state.tasks.push(taskConstruct);
       addToTasks(state.tasks);
+    },
+    getToDoTasks: (state) => {
+      state.toDoTasks = state.tasks.filter((task) => task.status === "todo");
+    },
+    getProgressTasks: (state) => {
+      state.progressTasks = state.tasks.filter(
+        (task) => task.status === "progress"
+      );
+    },
+    getDoneTasks: (state) => {
+      state.doneTasks = state.tasks.filter((task) => task.status === "done");
     },
   },
   extraReducers: (builder) => {
@@ -39,5 +53,6 @@ const tasksSlice = createSlice({
   },
 });
 
-export const { setTasks } = tasksSlice.actions;
+export const { setTasks, getToDoTasks, getProgressTasks, getDoneTasks } =
+  tasksSlice.actions;
 export default tasksSlice.reducer;
