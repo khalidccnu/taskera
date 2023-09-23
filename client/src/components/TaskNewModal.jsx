@@ -1,4 +1,5 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
+import axios from "axios";
 import toast from "react-hot-toast";
 import { useFormik } from "formik";
 import * as yup from "yup";
@@ -30,6 +31,7 @@ const TaskNewModal = () => {
   const dispatch = useDispatch();
   const { user } = useSelector((store) => store.authSlice);
   const { users } = useSelector((store) => store.usersSlice);
+  const [isLoading, setLoading] = useState(false);
 
   const formik = useFormik({
     initialValues: {
@@ -41,24 +43,36 @@ const TaskNewModal = () => {
       documents: null,
     },
     validationSchema,
-    onSubmit: (values, formikHelpers) => {
+    onSubmit: async (values, formikHelpers) => {
+      setLoading(true);
+
+      const obj = { ...values };
       const formData = new FormData();
 
       // create form data
-      Object.entries(values).forEach(([key, value]) => {
+      Object.entries(obj).forEach(([key, value]) => {
         if (value instanceof FileList) {
           for (let i = 0; i < value.length; i++) {
-            formData.append(`${key}[${i}]`, value[i]);
+            formData.append(key, value[i]);
           }
-        } else if (typeof value === "string" || value instanceof Date) {
+        } else if (value instanceof Date) {
+          formData.append(key, value.toISOString());
+        } else if (typeof value === "string") {
           formData.append(key, value);
         }
       });
 
+      // upload documents to server
+      delete obj.documents;
+      obj.documentsLinks = await axios
+        .post(`${import.meta.env.VITE_API_URL}/documents/upload`, formData)
+        .then((response) => response.data);
+
       // create task
-      dispatch(setTasks(values));
+      dispatch(setTasks(obj));
       closeModalRef.current.click();
       formikHelpers.resetForm();
+      setLoading(false);
 
       if (user.uid === values.assign) toast.success("Task created!");
       else toast.success("Task assigned!");
@@ -216,7 +230,13 @@ const TaskNewModal = () => {
           type="submit"
           className="btn btn-sm w-full bg-axolotl hover:bg-transparent text-white hover:text-axolotl !border-axolotl rounded normal-case"
         >
-          Create
+          <span>Create</span>
+          {isLoading ? (
+            <span
+              className="inline-block h-4 w-4 border-2 border-current border-r-transparent rounded-full animate-spin"
+              role="status"
+            ></span>
+          ) : null}
         </button>
       </form>
     </div>
