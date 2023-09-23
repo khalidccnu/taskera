@@ -13,19 +13,18 @@ import TaskViewModal from "./TaskViewModal.jsx";
 
 const Tasks = () => {
   const dispatch = useDispatch();
+  const { user } = useSelector((store) => store.authSlice);
   const { tasks } = useSelector((store) => store.tasksSlice);
   const [task, setTask] = useState(null);
 
   useEffect(() => {
-    dispatch(getTasks());
-  }, []);
+    if (user) dispatch(getTasks({ uid: user.uid }));
+  }, [user]);
 
   useEffect(() => {
-    if (tasks.length) {
-      dispatch(getToDoTasks());
-      dispatch(getProgressTasks());
-      dispatch(getDoneTasks());
-    }
+    dispatch(getToDoTasks());
+    dispatch(getProgressTasks());
+    dispatch(getDoneTasks());
   }, [tasks]);
 
   return (

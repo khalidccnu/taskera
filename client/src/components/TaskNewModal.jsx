@@ -27,6 +27,7 @@ const validationSchema = yup.object({
 const TaskNewModal = () => {
   const closeModalRef = useRef(null);
   const dispatch = useDispatch();
+  const { user } = useSelector((store) => store.authSlice);
   const { users } = useSelector((store) => store.usersSlice);
 
   const formik = useFormik({
@@ -39,10 +40,13 @@ const TaskNewModal = () => {
     },
     validationSchema,
     onSubmit: (values, formikHelpers) => {
-      dispatch(setTasks(values));
+      if (user.uid === values.assign) dispatch(setTasks(values));
+
       closeModalRef.current.click();
       formikHelpers.resetForm();
-      toast.success("Task created!");
+
+      if (user.uid === values.assign) toast.success("Task created!");
+      else toast.success("Task assigned!");
     },
   });
 

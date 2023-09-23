@@ -32,6 +32,14 @@ const tasksSlice = createSlice({
       state.tasks.splice(taskIdx, 1, action.payload);
       handleTasks(state.tasks);
     },
+    deleteTasks: (state, action) => {
+      const taskIdx = state.tasks.findIndex(
+        (task) => task.id === action.payload.id
+      );
+
+      state.tasks.splice(taskIdx, 1);
+      handleTasks(state.tasks);
+    },
     updateTaskStatus: (state, action) => {
       const taskIdx = state.tasks.findIndex(
         (task) => task.id === action.payload.id
@@ -77,6 +85,7 @@ const tasksSlice = createSlice({
 export const {
   setTasks,
   updateTasks,
+  deleteTasks,
   updateTaskStatus,
   getToDoTasks,
   getProgressTasks,

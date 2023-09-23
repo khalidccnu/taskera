@@ -1,5 +1,5 @@
 import React from "react";
-import { Link, NavLink, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { IKImage } from "imagekitio-react";
 import { FaPlus } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
@@ -64,32 +64,6 @@ const Nav = () => {
                 tabIndex={0}
                 className="mt-3 z-[1] p-2 shadow menu menu-sm dropdown-content bg-base-100 rounded-box w-52"
               >
-                <li>
-                  <NavLink
-                    to="/dashboard"
-                    className={({ isActive }) =>
-                      "!bg-transparent transition-colors duration-500 " +
-                      (isActive
-                        ? "text-axolotl hover:text-green-rifle"
-                        : "hover:text-green-rifle")
-                    }
-                  >
-                    Dashboard
-                  </NavLink>
-                </li>
-                <li>
-                  <NavLink
-                    to="/profile"
-                    className={({ isActive }) =>
-                      "!bg-transparent transition-colors duration-500 " +
-                      (isActive
-                        ? "text-axolotl hover:text-green-rifle"
-                        : "hover:text-green-rifle")
-                    }
-                  >
-                    Profile
-                  </NavLink>
-                </li>
                 <li>
                   <span
                     className={`!bg-transparent hover:text-green-rifle transition-colors duration-500`}

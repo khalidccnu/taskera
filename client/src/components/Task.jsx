@@ -1,9 +1,13 @@
 import React from "react";
 import { useDrag } from "react-dnd";
-import { FaEye } from "react-icons/fa";
+import toast from "react-hot-toast";
+import { FaEye, FaTrash } from "react-icons/fa";
+import { useDispatch } from "react-redux";
+import { deleteTasks } from "../redux/tasks/tasksSlice.js";
 
 const Task = ({ setTask, task }) => {
   const { id, title } = task ?? {};
+  const dispatch = useDispatch();
 
   const [{ isDragging }, drag] = useDrag(() => ({
     type: "task",
@@ -21,13 +25,22 @@ const Task = ({ setTask, task }) => {
       ref={drag}
     >
       <span>{title}</span>
-      <FaEye
-        className={`cursor-pointer`}
-        onClick={() => {
-          setTask(task);
-          window.task_view_modal.showModal();
-        }}
-      />
+      <div className={`flex space-x-1`}>
+        <FaEye
+          className={`cursor-pointer`}
+          onClick={() => {
+            setTask(task);
+            window.task_view_modal.showModal();
+          }}
+        />
+        <FaTrash
+          className={`cursor-pointer`}
+          onClick={() => {
+            dispatch(deleteTasks(id));
+            toast.success("Task deleted!");
+          }}
+        />
+      </div>
     </h5>
   );
 };
