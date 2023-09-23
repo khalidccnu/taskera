@@ -8,7 +8,7 @@ export const getTasks = () => {
   return tasks;
 };
 
-// new tasks
-export const addToTasks = (tasks) => {
+// new or update tasks
+export const handleTasks = (tasks) => {
   localStorage.setItem("tasks", JSON.stringify(tasks));
 };

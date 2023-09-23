@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { getTasks } from "./tasksThunks.js";
-import { addToTasks } from "../../utils/localStorage.js";
+import { handleTasks } from "../../utils/localStorage.js";
 
 const initialState = {
   tasks: [],
@@ -22,7 +22,15 @@ const tasksSlice = createSlice({
       };
 
       state.tasks.push(taskConstruct);
-      addToTasks(state.tasks);
+      handleTasks(state.tasks);
+    },
+    updateTasks: (state, action) => {
+      const taskIdx = state.tasks.findIndex(
+        (task) => task.id === action.payload.id
+      );
+
+      state.tasks.splice(taskIdx, 1, action.payload);
+      handleTasks(state.tasks);
     },
     getToDoTasks: (state) => {
       state.toDoTasks = state.tasks.filter((task) => task.status === "todo");
@@ -53,6 +61,11 @@ const tasksSlice = createSlice({
   },
 });
 
-export const { setTasks, getToDoTasks, getProgressTasks, getDoneTasks } =
-  tasksSlice.actions;
+export const {
+  setTasks,
+  updateTasks,
+  getToDoTasks,
+  getProgressTasks,
+  getDoneTasks,
+} = tasksSlice.actions;
 export default tasksSlice.reducer;

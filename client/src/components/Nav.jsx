@@ -4,7 +4,7 @@ import { IKImage } from "imagekitio-react";
 import { FaPlus } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import { logOut } from "../redux/auth/authThunks.js";
-import TaskModal from "./TaskModal.jsx";
+import TaskNewModal from "./TaskNewModal.jsx";
 
 const Nav = () => {
   const navigate = useNavigate();
@@ -104,7 +104,7 @@ const Nav = () => {
         </div>
         {/* new task modal */}
         <dialog id="new_task_modal" className="modal">
-          <TaskModal />
+          <TaskNewModal />
         </dialog>
       </div>
     </nav>

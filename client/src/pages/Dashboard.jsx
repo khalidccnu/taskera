@@ -26,7 +26,7 @@ const Dashboard = () => {
       dispatch(getProgressTasks());
       dispatch(getDoneTasks());
     }
-  }, [tasks.length]);
+  }, [tasks]);
 
   return (
     <section className={`py-16`}>

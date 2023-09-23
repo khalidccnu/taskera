@@ -24,7 +24,7 @@ const validationSchema = yup.object({
   priority: yup.string().required("Priority is required"),
 });
 
-const TaskModal = () => {
+const TaskNewModal = () => {
   const closeModalRef = useRef(null);
   const dispatch = useDispatch();
   const { users } = useSelector((store) => store.usersSlice);
@@ -42,7 +42,7 @@ const TaskModal = () => {
       dispatch(setTasks(values));
       closeModalRef.current.click();
       formikHelpers.resetForm();
-      toast.success("Task created");
+      toast.success("Task created!");
     },
   });
 
@@ -182,4 +182,4 @@ const TaskModal = () => {
   );
 };
 
-export default TaskModal;
+export default TaskNewModal;
