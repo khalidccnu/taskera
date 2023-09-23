@@ -32,6 +32,19 @@ const tasksSlice = createSlice({
       state.tasks.splice(taskIdx, 1, action.payload);
       handleTasks(state.tasks);
     },
+    updateTaskStatus: (state, action) => {
+      const taskIdx = state.tasks.findIndex(
+        (task) => task.id === action.payload.id
+      );
+
+      const task = state.tasks.find((task) => task.id === action.payload.id);
+
+      state.tasks.splice(taskIdx, 1, {
+        ...task,
+        status: action.payload.status,
+      });
+      handleTasks(state.tasks);
+    },
     getToDoTasks: (state) => {
       state.toDoTasks = state.tasks.filter((task) => task.status === "todo");
     },
@@ -64,6 +77,7 @@ const tasksSlice = createSlice({
 export const {
   setTasks,
   updateTasks,
+  updateTaskStatus,
   getToDoTasks,
   getProgressTasks,
   getDoneTasks,
