@@ -52,7 +52,7 @@ const tasksSlice = createSlice({
     },
     deleteTasks: (state, action) => {
       const taskIdx = state.tasks.findIndex(
-        (task) => task.id === action.payload.id
+        (task) => task.id === action.payload
       );
 
       state.tasks.splice(taskIdx, 1);
