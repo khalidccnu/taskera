@@ -3,6 +3,7 @@ import toast from "react-hot-toast";
 import { useFormik } from "formik";
 import * as yup from "yup";
 import DatePicker from "react-datepicker";
+import { FaUpload } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import { setTasks } from "../redux/tasks/tasksSlice.js";
 import { getUsers } from "../redux/users/usersThunks.js";
@@ -37,11 +38,25 @@ const TaskNewModal = () => {
       assign: "",
       dueDate: null,
       priority: "",
+      documents: null,
     },
     validationSchema,
     onSubmit: (values, formikHelpers) => {
-      if (user.uid === values.assign) dispatch(setTasks(values));
+      const formData = new FormData();
 
+      // create form data
+      Object.entries(values).forEach(([key, value]) => {
+        if (value instanceof FileList) {
+          for (let i = 0; i < value.length; i++) {
+            formData.append(`${key}[${i}]`, value[i]);
+          }
+        } else if (typeof value === "string" || value instanceof Date) {
+          formData.append(key, value);
+        }
+      });
+
+      // create task
+      dispatch(setTasks(values));
       closeModalRef.current.click();
       formikHelpers.resetForm();
 
@@ -173,6 +188,28 @@ const TaskNewModal = () => {
               {formik.touched.priority && formik.errors.priority}
             </small>
           ) : null}
+        </div>
+        {/* documents box */}
+        <div className="flex flex-col gap-3">
+          <label className="relative btn btn-sm rounded w-full normal-case">
+            {formik.values.documents ? (
+              <span>{formik.values.documents.length + " files"}</span>
+            ) : (
+              <>
+                <span>Choose documents</span>
+                <FaUpload />
+              </>
+            )}
+            <input
+              type="file"
+              multiple
+              name="documents"
+              className="absolute left-0 top-0 w-0 h-0 overflow-hidden"
+              onChange={(e) =>
+                formik.setFieldValue("documents", e.currentTarget.files)
+              }
+            />
+          </label>
         </div>
         {/* form submit button */}
         <button

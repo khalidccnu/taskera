@@ -5,6 +5,7 @@ import { handleTasks } from "../../utils/localStorage.js";
 const initialState = {
   tasks: [],
   tasksError: null,
+  myTasks: [],
   toDoTasks: [],
   progressTasks: [],
   doneTasks: [],
@@ -23,6 +24,17 @@ const tasksSlice = createSlice({
 
       state.tasks.push(taskConstruct);
       handleTasks(state.tasks);
+
+      state.tasks = [
+        ...[...state.tasks].sort((a, b) =>
+          a.dueDate > b.dueDate ? 1 : a.dueDate < b.dueDate ? -1 : 0
+        ),
+      ];
+    },
+    setMyTasks: (state, action) => {
+      state.myTasks = state.tasks.filter(
+        (task) => task.assign === action.payload.uid
+      );
     },
     updateTasks: (state, action) => {
       const taskIdx = state.tasks.findIndex(
@@ -31,6 +43,12 @@ const tasksSlice = createSlice({
 
       state.tasks.splice(taskIdx, 1, action.payload);
       handleTasks(state.tasks);
+
+      state.tasks = [
+        ...[...state.tasks].sort((a, b) =>
+          a.dueDate > b.dueDate ? 1 : a.dueDate < b.dueDate ? -1 : 0
+        ),
+      ];
     },
     deleteTasks: (state, action) => {
       const taskIdx = state.tasks.findIndex(
@@ -54,15 +72,15 @@ const tasksSlice = createSlice({
       handleTasks(state.tasks);
     },
     getToDoTasks: (state) => {
-      state.toDoTasks = state.tasks.filter((task) => task.status === "todo");
+      state.toDoTasks = state.myTasks.filter((task) => task.status === "todo");
     },
     getProgressTasks: (state) => {
-      state.progressTasks = state.tasks.filter(
+      state.progressTasks = state.myTasks.filter(
         (task) => task.status === "progress"
       );
     },
     getDoneTasks: (state) => {
-      state.doneTasks = state.tasks.filter((task) => task.status === "done");
+      state.doneTasks = state.myTasks.filter((task) => task.status === "done");
     },
   },
   extraReducers: (builder) => {
@@ -84,6 +102,7 @@ const tasksSlice = createSlice({
 
 export const {
   setTasks,
+  setMyTasks,
   updateTasks,
   deleteTasks,
   updateTaskStatus,

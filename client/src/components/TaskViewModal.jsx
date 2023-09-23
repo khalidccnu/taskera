@@ -4,7 +4,7 @@ import TaskView from "./TaskView.jsx";
 import TaskEdit from "./TaskEdit.jsx";
 
 const TaskViewModal = ({ task }) => {
-  const { status } = task ?? {};
+  const { priority } = task ?? {};
   const closeModalRef = useRef(null);
   const [isEdit, setEdit] = useState(false);
 
@@ -17,9 +17,11 @@ const TaskViewModal = ({ task }) => {
         }`}
       >
         {!isEdit ? (
-          <p className="flex items-center text-gray-500 space-x-1">
+          <p className="flex text-axolotl space-x-1">
             <GrStatusGoodSmall />
-            <span>{status}</span>
+            <span className={`-mt-0.5`}>
+              {+priority === 1 ? "Low" : +priority === 2 ? "Moderate" : "High"}
+            </span>
           </p>
         ) : null}
         {/* close modal */}

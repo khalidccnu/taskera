@@ -4,6 +4,7 @@ import {
   getDoneTasks,
   getProgressTasks,
   getToDoTasks,
+  setMyTasks,
 } from "../redux/tasks/tasksSlice.js";
 import { getTasks } from "../redux/tasks/tasksThunks.js";
 import ToDoTasks from "./ToDoTasks.jsx";
@@ -14,18 +15,22 @@ import TaskViewModal from "./TaskViewModal.jsx";
 const Tasks = () => {
   const dispatch = useDispatch();
   const { user } = useSelector((store) => store.authSlice);
-  const { tasks } = useSelector((store) => store.tasksSlice);
+  const { tasks, myTasks } = useSelector((store) => store.tasksSlice);
   const [task, setTask] = useState(null);
 
   useEffect(() => {
-    if (user) dispatch(getTasks({ uid: user.uid }));
-  }, [user]);
+    dispatch(getTasks());
+  }, []);
+
+  useEffect(() => {
+    if (user) dispatch(setMyTasks({ uid: user.uid }));
+  }, [user, tasks]);
 
   useEffect(() => {
     dispatch(getToDoTasks());
     dispatch(getProgressTasks());
     dispatch(getDoneTasks());
-  }, [tasks]);
+  }, [myTasks]);
 
   return (
     <>
