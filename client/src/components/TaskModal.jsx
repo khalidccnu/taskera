@@ -38,9 +38,10 @@ const TaskModal = () => {
       priority: "",
     },
     validationSchema,
-    onSubmit: (values) => {
+    onSubmit: (values, formikHelpers) => {
       dispatch(setTasks(values));
       closeModalRef.current.click();
+      formikHelpers.resetForm();
       toast.success("Task created");
     },
   });

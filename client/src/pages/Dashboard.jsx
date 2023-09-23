@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { FaEye } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -7,12 +7,14 @@ import {
   getToDoTasks,
 } from "../redux/tasks/tasksSlice.js";
 import { getTasks } from "../redux/tasks/tasksThunks.js";
+import TaskViewModal from "../components/TaskViewModal.jsx";
 
 const Dashboard = () => {
   const dispatch = useDispatch();
   const { tasks, toDoTasks, progressTasks, doneTasks } = useSelector(
     (store) => store.tasksSlice
   );
+  const [task, setTask] = useState(null);
 
   useEffect(() => {
     dispatch(getTasks());
@@ -49,7 +51,13 @@ const Dashboard = () => {
                     className={`flex justify-between items-center px-3 py-2 font-medium text-white bg-axolotl rounded space-x-2.5`}
                   >
                     <span>{task.title}</span>
-                    <FaEye />
+                    <FaEye
+                      className={`cursor-pointer`}
+                      onClick={() => {
+                        setTask(task);
+                        window.task_view_modal.showModal();
+                      }}
+                    />
                   </h5>
                 ))
               ) : (
@@ -80,7 +88,13 @@ const Dashboard = () => {
                     className={`flex justify-between items-center px-3 py-2 font-medium text-white bg-axolotl rounded space-x-2.5`}
                   >
                     <span>{task.title}</span>
-                    <FaEye />
+                    <FaEye
+                      className={`cursor-pointer`}
+                      onClick={() => {
+                        setTask(task);
+                        window.task_view_modal.showModal();
+                      }}
+                    />
                   </h5>
                 ))
               ) : (
@@ -111,7 +125,13 @@ const Dashboard = () => {
                     className={`flex justify-between items-center px-3 py-2 font-medium text-white bg-axolotl rounded space-x-2.5`}
                   >
                     <span>{task.title}</span>
-                    <FaEye />
+                    <FaEye
+                      className={`cursor-pointer`}
+                      onClick={() => {
+                        setTask(task);
+                        window.task_view_modal.showModal();
+                      }}
+                    />
                   </h5>
                 ))
               ) : (
@@ -124,6 +144,10 @@ const Dashboard = () => {
             </div>
           </div>
         </div>
+        {/* task view modal declaration */}
+        <dialog id="task_view_modal" className="modal">
+          <TaskViewModal task={task} />
+        </dialog>
       </div>
     </section>
   );
